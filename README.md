@@ -29,6 +29,7 @@ Furthermore, the `Newsboat` class has the following methods:
 - `update()` which updates the newsboat instance
 - `get_all_unread_items()` which returns an array of `Item`s that are marked as unread in the database
 - `get_all_items_from_defined_feed(feed_obj)` which takes a `Feed` as an argument and returns all `Items` of that feed from the database
+- `mark_as_read(item_obj)` which takes an `Item` as an argument and updates the cache database entry of that item as read (instead of unread)
 
 ### Feeds and Items
 Each feed and each item that you get your hands on is a `namedtuple` with the following properties:
