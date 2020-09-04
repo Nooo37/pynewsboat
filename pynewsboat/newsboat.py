@@ -90,7 +90,10 @@ class Newsboat:
         return temp_feed
 
     def __cursor_db(self):
-        return sqlite3.connect(self.path_to_db).cursor()
+        return self.__conn_db().cursor()
+
+    def __conn_db(self):
+        return sqlite3.connect(self.path_to_db)
 
     def __get_feed(self, data_feed_obj):
         # takes a FeedData obj and returns a Feed obj
@@ -140,3 +143,17 @@ class Newsboat:
             temp_item = self.__sqlite_fetch_to_item(item)
             result_item_array.append(temp_item)
         return result_item_array
+
+    def mark_as_read(self, item):
+        # Argument must be an 'Item' namedtuple
+        if type(item).__name__ != "Item":
+            raise ValueError("Argument must be of the type 'Item'")
+        try:
+            guid = item.guid
+        except AttributeError:
+            # Argument must also have the 'guid' property
+            raise ValueError("Argument must be of the type 'Item' and correctly formatted")
+        conn = self.__conn_db()
+        cur = conn.cursor()
+        cur.execute(f"UPDATE 'rss_item' SET unread = 0 WHERE guid='{guid}';")
+        conn.commit()
